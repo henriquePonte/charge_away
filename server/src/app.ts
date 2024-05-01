@@ -3,6 +3,7 @@ import UserController from "./controllers/UserController";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import RoleController from "./controllers/RoleController";
 
 // Configure environment variables
 dotenv.config();
@@ -31,6 +32,7 @@ app.use(bodyParser.json());
 
 // API Routes
 app.use("/users", UserController);
+app.use("/roles", RoleController);
 
 // API Listen
 app.listen(8000, () => {
