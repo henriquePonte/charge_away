@@ -1,5 +1,5 @@
 import { Model, Schema, model } from "mongoose";
-import {UserSchema} from "../schemas/UserSchema";
+import {UserSchema} from "../schemas/user/UserSchema";
 
 // Define a Mongoose model
 export interface IUser extends Document {

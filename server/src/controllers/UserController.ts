@@ -1,5 +1,5 @@
 import Router, { Response } from "express";
-import UserValidationSchema from "../schemas/UserValidationSchema";
+import UserValidationSchema from "../schemas/user/UserValidationSchema";
 import { matchedData, validationResult } from "express-validator";
 import { create } from "../services/UserService";
 import { IUser } from "../models/UserModel";
