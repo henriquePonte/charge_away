@@ -1,5 +1,5 @@
 import express from "express";
-import personRoutes from "./routes/person";
+import UserController from "./controllers/UserController";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -30,7 +30,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // API Routes
-app.use("/person", personRoutes);
+app.use("/users", UserController);
 
 // API Listen
 app.listen(8000, () => {
