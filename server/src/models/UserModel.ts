@@ -5,7 +5,7 @@ export interface IUser extends Document {
     email: string,
     name: string,
     password: string,
-    location: string,
+    localidade: string,
     urlPhoto: string
 }
 
