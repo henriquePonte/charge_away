@@ -1,14 +1,19 @@
 import express from "express";
-import UserController from "./controllers/UserController";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import UserController from "./controllers/UserController";
 import RoleController from "./controllers/RoleController";
+import LocalController from "./controllers/LocalController";
+import AvailabilityController from "./controllers/AvailabilityController";
+
 
 // Configure environment variables
 dotenv.config();
 
-const { MONGO_URI } = process.env;
+const {MONGO_URI} = process.env;
+const {Port} = process.env;
+
 
 // Check if credentials are valid (exists)
 if (!MONGO_URI) {
@@ -33,8 +38,11 @@ app.use(bodyParser.json());
 // API Routes
 app.use("/users", UserController);
 app.use("/roles", RoleController);
+app.use("/locals", LocalController);
+app.use("/Availabilities", AvailabilityController);
+
 
 // API Listen
-app.listen(8000, () => {
-    console.log("Server is listening at port 8000");
+app.listen(Port, () => {
+    console.log(`Server is listening at port: ${Port}`);
 });
