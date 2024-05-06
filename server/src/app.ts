@@ -8,8 +8,7 @@ import LocalController from "./controllers/LocalController";
 import AvailabilityController from "./controllers/AvailabilityController";
 import { seedLocalDatabase } from './seeders/localSeeder';
 import { seedAvailabilityDatabase } from './seeders/AvailabilitySeeder';
-
-
+import { seedUserDatabase } from "./seeders/UserSeeder";
 
 
 // Configure environment variables
@@ -32,6 +31,7 @@ mongoose
         console.log("Connected to the database...");
         seedLocalDatabase();
         seedAvailabilityDatabase();
+        seedUserDatabase();
     })
     .catch(e => {
         console.log(e);
