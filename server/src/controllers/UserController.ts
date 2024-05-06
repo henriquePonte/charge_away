@@ -35,8 +35,11 @@ router.put("/:username", (req, res) => {
     res.send(`PUT ${username} person!`);
 });
 
-router.delete("/", (req, res) => {
-    res.send("DELETE person!");
+router.delete("/:id", (req, res) => {
+    const id = req.params.id
+    UserModel.findByIdAndDelete(id).then(result => {
+        res.end(result?.toString())
+    }).catch(err => console.log(err));
 });
 
 export default router;
