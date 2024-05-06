@@ -1,6 +1,6 @@
 import {Schema} from "mongoose";
 
-export const RoleSchema = new Schema({
+export const ChargeSchema = new Schema({
     date: Date,
     duration: Date,
     wattConsumed: Number,
