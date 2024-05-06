@@ -1,7 +1,8 @@
-import Router, { Response } from "express";
+import Router from "express";
 import {seedLocalDatabase} from "../seeders/localSeeder";
 import {seedAvailabilityDatabase} from "../seeders/AvailabilitySeeder";
 import {seedUserDatabase} from "../seeders/UserSeeder";
+import {seedRoleDatabase} from "../seeders/RoleSeeder";
 
 const router = Router();
 
@@ -10,6 +11,7 @@ router.get("/", (req, res) => {
     seedLocalDatabase();
     seedAvailabilityDatabase();
     seedUserDatabase();
+    seedRoleDatabase();
 });
 
 export default router;
