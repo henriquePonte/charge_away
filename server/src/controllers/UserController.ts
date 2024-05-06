@@ -2,18 +2,26 @@ import Router, { Response } from "express";
 import UserValidationSchema from "../schemas/user/UserValidationSchema";
 import { matchedData, validationResult } from "express-validator";
 import { create } from "../services/UserService";
-import { IUser } from "../models/UserModel";
+import {IUser, UserModel} from "../models/UserModel";
 
 const router = Router();
 
 router.get("/", (req, res) => {
     console.log(req.query);
-    res.json([{ firstName: "Vítor", lastName: "Sousa", username: "vhsousa" }]);
+    UserModel.find().then(result => {
+        res.end(JSON.stringify(result));
+    }).catch(err => {
+        console.log(err);
+    });
 });
 
 router.get("/:username", (req, res) => {
     const username = req.params.username;
-    res.send(`GET ${username} person!`);
+    UserModel.find({ name: new RegExp(`.*${username}.*`)}).then(result => {
+        res.end(JSON.stringify(result));
+    }).catch(err => {
+        console.log(err);
+    });
 });
 
 router.post("/", UserValidationSchema(), async (req: any, res: Response) => {
