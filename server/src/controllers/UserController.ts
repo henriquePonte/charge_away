@@ -9,19 +9,15 @@ const router = Router();
 router.get("/", (req, res) => {
     console.log(req.query);
     UserModel.find().then(result => {
-        res.end(JSON.stringify(result));
-    }).catch(err => {
-        console.log(err);
-    });
+        res.send(result?.toString());
+    }).catch(err => console.log(err));
 });
 
 router.get("/:username", (req, res) => {
     const username = req.params.username;
     UserModel.find({ name: new RegExp(`.*${username}.*`)}).then(result => {
-        res.end(JSON.stringify(result));
-    }).catch(err => {
-        console.log(err);
-    });
+        res.end(result?.toString());
+    }).catch(err => console.log(err));
 });
 
 router.post("/", UserValidationSchema(), async (req: any, res: Response) => {
