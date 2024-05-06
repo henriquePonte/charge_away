@@ -6,6 +6,10 @@ import UserController from "./controllers/UserController";
 import RoleController from "./controllers/RoleController";
 import LocalController from "./controllers/LocalController";
 import AvailabilityController from "./controllers/AvailabilityController";
+import { seedLocalDatabase } from './seeders/localSeeder';
+import { seedAvailabilityDatabase } from './seeders/AvailabilitySeeder';
+
+
 
 
 // Configure environment variables
@@ -24,7 +28,11 @@ if (!MONGO_URI) {
 // Configure database access
 mongoose
     .connect(MONGO_URI)
-    .then(_ => console.log("Connected to the database..."))
+    .then(_ => {
+        console.log("Connected to the database...");
+        seedLocalDatabase();
+        seedAvailabilityDatabase();
+    })
     .catch(e => {
         console.log(e);
         process.exit(-2);
