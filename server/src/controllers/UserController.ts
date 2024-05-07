@@ -1,8 +1,9 @@
-import Router, { Response } from "express";
+import Router, {Request, Response} from "express";
 import UserValidationSchema from "../schemas/user/UserValidationSchema";
 import { matchedData, validationResult } from "express-validator";
-import { create } from "../services/UserService";
+import { create, loginUser } from "../services/UserService";
 import {IUser, UserModel} from "../models/UserModel";
+import {LoginValidationSchema} from "../schemas/user/LoginValidationSchema";
 
 const router = Router();
 
@@ -40,6 +41,22 @@ router.delete("/:id", (req, res) => {
     UserModel.findByIdAndDelete(id).then(result => {
         res.end(result?.toString())
     }).catch(err => console.log(err));
+});
+
+router.post("/login", LoginValidationSchema(), async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await loginUser(email, password);
+        if (user) {
+            return res.json(user);
+        } else {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
 });
 
 export default router;
