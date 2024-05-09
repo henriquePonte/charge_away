@@ -1,7 +1,7 @@
 import Router, {Request, Response} from "express";
 import UserValidationSchema from "../schemas/user/UserValidationSchema";
 import { matchedData, validationResult } from "express-validator";
-import { create, loginUser } from "../services/UserService";
+import {create, loginUser, update, destroy} from "../services/UserService";
 import {IUser, UserModel} from "../models/UserModel";
 import {LoginValidationSchema} from "../schemas/user/LoginValidationSchema";
 
@@ -31,9 +31,14 @@ router.post("/", UserValidationSchema(), async (req: any, res: Response) => {
     return res.status(400).json({ errors: result.array() });
 });
 
-router.put("/:username", (req, res) => {
-    const username = req.params.username;
-    res.send(`PUT ${username} person!`);
+router.put("/:id", UserValidationSchema(), async (req: any, res: Response) => {
+    const result = validationResult(req);
+
+    if (result.isEmpty()) {
+        return res.json(await update(req.params.id, matchedData(req) as Partial<IUser>));
+    }
+
+    return res.status(400).json({errors: result.array()});
 });
 
 router.delete("/:id", (req, res) => {
