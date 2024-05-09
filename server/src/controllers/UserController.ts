@@ -41,11 +41,10 @@ router.put("/:id", UserValidationSchema(), async (req: any, res: Response) => {
     return res.status(400).json({errors: result.array()});
 });
 
-router.delete("/:id", (req, res) => {
-    const id = req.params.id
-    UserModel.findByIdAndDelete(id).then(result => {
-        res.end(result?.toString())
-    }).catch(err => console.log(err));
+router.delete("/:id", async (req, res) => {
+    if (req.params.id) {
+        return res.json(destroy(req.params.id));
+    }
 });
 
 router.post("/login", LoginValidationSchema(), async (req: Request, res: Response) => {

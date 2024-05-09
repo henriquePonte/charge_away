@@ -8,6 +8,10 @@ export const update = async (id: String, person: Partial<IUser>) => {
     return UserModel.findByIdAndUpdate(id, person);
 }
 
+export const destroy = async (id: String) => {
+    return UserModel.findByIdAndDelete(id);
+}
+
 export const loginUser = async (email: string, password: string): Promise<Partial<IUser> | null> => {
     // Use findOne with lean() to get a plain JavaScript object
     const user = await UserModel.findOne({ email, password }).lean();
