@@ -16,6 +16,9 @@ const LocalValidationSchema = () => {
         },
         urlPhoto: {
             notEmpty: true
+        },
+        user: {
+            notEmpty: true
         }
     });
 }
