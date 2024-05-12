@@ -16,6 +16,7 @@ router.get("/", (req, res) => {
     seedRoleDatabase();
     seedChargeDatabase();
     seedChargerDatabase();
+    res.send("Seeding DB!")
 });
 
 export default router;
