@@ -1,33 +1,69 @@
-import Router, {Response} from "express";
+import Router, { Response } from "express";
 import ChargeValidationSchema from "../schemas/charge/ChargeValidationSchema";
-import {matchedData, validationResult} from "express-validator";
-import {ICharge} from "../models/ChargeModel";
-import {create} from "../services/ChargeService";
+import { matchedData, validationResult } from "express-validator";
+import {ICharge, ChargeModel} from "../models/ChargeModel";
+import { create } from "../services/ChargeService";
+
 
 const router = Router();
-
+/**
+ * Route get a charge
+ */
 router.get("/", (req, res) => {
     console.log(req.query);
-    res.send("Getting charges!");
+    ChargeModel.find()
+        .then(result => {
+            res.send(result?.toString());
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send("Error getting charge.");
+        });
+    res.send("Getting charge!");
 });
 
+/**
+ * Route to create new Charge
+ */
 router.post("/", ChargeValidationSchema(), async (req: any, res: Response) => {
     const result = validationResult(req);
 
     if (result.isEmpty()) {
-        return res.json(await create(matchedData(req) as Partial<ICharge>));
-    }
+        try {
+            const newCharge = await create(matchedData(req) as Partial<ICharge>);
 
-    return res.status(400).json({ errors: result.array() });
+            return res.json(newCharge);
+        } catch (error) {
+            console.error("ChargeController: Error creating new charge:", error);
+            return res.status(500).json({ error: "Error creating new charge!" });
+        }
+    } else {
+        return res.status(400).json({ errors: result.array() });
+    }
+});
+
+/**
+ * Route to delete a Charge
+ */
+router.delete("/:id", (req, res) => {
+    const chargeId = req.params.id;
+
+    ChargeModel.findByIdAndDelete(chargeId)
+        .then(charge => {
+            if (!charge) {
+                return res.status(404).send("Charge not found.");
+            }
+            res.send("Charge deleted successfully.");
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send("Error deleting charge.");
+        });
 });
 
 router.put("/:charge", (req, res) => {
     const charge = req.params.charge;
     res.send(`PUT ${charge}`);
-});
-
-router.delete("/", (req, res) => {
-    res.send("DELETE charge!");
 });
 
 export default router;
