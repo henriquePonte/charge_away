@@ -1,21 +1,38 @@
 import { IUser, UserModel } from "../models/UserModel";
+import bcrypt from "bcrypt";
 
 export const create = async (person: Partial<IUser>) => {
+
     return await UserModel.create(person)
-}
 
-export const update = async (id: String, person: Partial<IUser>) => {
-    return UserModel.findByIdAndUpdate(id, person);
-}
-
-export const destroy = async (id: String) => {
-    return UserModel.findByIdAndDelete(id);
+    if (!person.password) {
+        throw new Error("Password is required");
+    }
+    const hashedPassword = await bcrypt.hash(person.password, 10);
+    const user = {...person, password: hashedPassword};
+    return await UserModel.create(user);
 }
 
 export const loginUser = async (email: string, password: string): Promise<Partial<IUser> | null> => {
-    // Use findOne with lean() to get a plain JavaScript object
-    const user = await UserModel.findOne({ email, password }).lean();
+    console.log("Attempting to login with email:", email);
+    const user = await UserModel.findOne({ email }).lean();
 
-    // If user is found, cast it to Partial<IUser>; otherwise, return null
-    return user ? user as Partial<IUser> : null;
+    if (!user) {
+        console.log("User not found");
+        return null;
+    }
+
+    console.log("Hashed password from DB:", user.password);
+    console.log("Provided password:", password);
+    //const passwordMatch = await bcrypt.compare(password,user.password);
+    const passwordMatch = password === user.password
+    console.log("Password match:", passwordMatch);
+
+    if (passwordMatch) {
+        console.log("User logged in successfully");
+        return user as Partial<IUser>; // Passwords match, return user
+    } else {
+        console.log("Invalid password");
+        return null; // Passwords do not match
+    }
 }
