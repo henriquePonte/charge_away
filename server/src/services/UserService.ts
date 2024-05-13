@@ -2,15 +2,20 @@ import { IUser, UserModel } from "../models/UserModel";
 import bcrypt from "bcrypt";
 
 export const create = async (person: Partial<IUser>) => {
-
-    return await UserModel.create(person)
-
     if (!person.password) {
         throw new Error("Password is required");
     }
     const hashedPassword = await bcrypt.hash(person.password, 10);
     const user = {...person, password: hashedPassword};
     return await UserModel.create(user);
+}
+
+export const update = async (id: String, person: Partial<IUser>) => {
+    return UserModel.findByIdAndUpdate(id, person);
+}
+
+export const destroy = async (id: String) => {
+    return UserModel.findByIdAndDelete(id);
 }
 
 export const loginUser = async (email: string, password: string): Promise<Partial<IUser> | null> => {
@@ -25,7 +30,7 @@ export const loginUser = async (email: string, password: string): Promise<Partia
     console.log("Hashed password from DB:", user.password);
     console.log("Provided password:", password);
     //const passwordMatch = await bcrypt.compare(password,user.password);
-    const passwordMatch = password === user.password
+    const passwordMatch = await bcrypt.compare(password, user.password);
     console.log("Password match:", passwordMatch);
 
     if (passwordMatch) {

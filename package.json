@@ -1,9 +1,11 @@
 {
   "dependencies": {
-    "faker": "^6.6.6",
+    "bcrypt": "^5.1.1",
+    "faker": "^5.5.3",
     "mongoose": "^8.3.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.12.8"
   }
 }
