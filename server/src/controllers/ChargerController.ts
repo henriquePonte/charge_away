@@ -3,7 +3,9 @@ import ChargerValidationSchema from "../schemas/charger/ChargerValidationSchema"
 import {matchedData, validationResult} from "express-validator";
 import {ICharger, ChargerModel} from "../models/ChargerModel";
 import {create} from "../services/ChargeService";
-import {ChargeModel} from "../models/ChargeModel";
+import {ChargeModel, ICharge} from "../models/ChargeModel";
+import {destroy, update} from "../services/UserService";
+
 
 const router = Router();
 
@@ -16,7 +18,9 @@ router.get("/", (req, res) => {
     }).catch(err => console.log(err));
 });
 
-
+/**
+ * Route create a Charger
+ */
 router.post("/", ChargerValidationSchema(), async (req: any, res: Response) => {
     const result = validationResult(req);
 
@@ -27,13 +31,26 @@ router.post("/", ChargerValidationSchema(), async (req: any, res: Response) => {
     return res.status(400).json({ errors: result.array() });
 });
 
-router.put("/:charger", (req, res) => {
-    const charger = req.params.charger;
-    res.send(`PUT ${charger}`);
+/**
+ * Route do update a Charger
+ */
+router.put("/:charger", ChargerValidationSchema(), async (req: any, res: Response) => {
+    const result = validationResult(req);
+
+    if (result.isEmpty()) {
+        return res.json(await update(req.params.id, matchedData(req) as Partial<ICharger>));
+    }
+
+    return res.status(400).json({errors: result.array()});
 });
 
-router.delete("/", (req, res) => {
-    res.send("DELETE charger!");
+/**
+ * Route to delete a Charger
+ */
+router.delete("/:id", async (req, res) => {
+    if (req.params.id) {
+        return res.json(destroy(req.params.id));
+    }
 });
 
 export default router;
