@@ -2,7 +2,8 @@ import Router, { Response } from "express";
 import ChargeValidationSchema from "../schemas/charge/ChargeValidationSchema";
 import { matchedData, validationResult } from "express-validator";
 import {ICharge, ChargeModel} from "../models/ChargeModel";
-import { create } from "../services/ChargeService";
+import {create, update} from "../services/ChargeService";
+import chargeValidationSchema from "../schemas/charge/ChargeValidationSchema";
 
 
 const router = Router();
@@ -61,9 +62,17 @@ router.delete("/:id", (req, res) => {
         });
 });
 
-router.put("/:charge", (req, res) => {
-    const charge = req.params.charge;
-    res.send(`PUT ${charge}`);
+router.put("/:id", chargeValidationSchema(), async (req: any, res: Response) => {
+    const chargeId = req.params.id;
+
+    try {
+        const updatedCharge = await update(chargeId, matchedData(req) as Partial<ICharge>);
+
+        return res.json(updatedCharge);
+    } catch (error) {
+        console.error("ChargeController: Error updating charge:", error);
+        return res.status(500).json({ error: "Error updating new charge!" });
+    }
 });
 
 export default router;
