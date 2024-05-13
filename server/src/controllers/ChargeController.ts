@@ -4,6 +4,7 @@ import { matchedData, validationResult } from "express-validator";
 import {ICharge, ChargeModel} from "../models/ChargeModel";
 import {create, update} from "../services/ChargeService";
 import chargeValidationSchema from "../schemas/charge/ChargeValidationSchema";
+import {UserModel} from "../models/UserModel";
 
 
 const router = Router();
@@ -20,7 +21,6 @@ router.get("/", (req, res) => {
             console.log(err);
             res.status(500).send("Error getting charge.");
         });
-    res.send("Getting charge!");
 });
 
 /**
