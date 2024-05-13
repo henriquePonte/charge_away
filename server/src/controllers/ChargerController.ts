@@ -7,17 +7,15 @@ import {ChargeModel} from "../models/ChargeModel";
 
 const router = Router();
 
+/**
+ * Route get a Charger
+ */
 router.get("/", (req, res) => {
     ChargeModel.find().then(result => {
         res.send(result?.toString());
     }).catch(err => console.log(err));
 });
 
-router.get("/:id", (req, res) => {
-    ChargeModel.findById(req.params.id).then(result => {
-        res.send(result?.toString());
-    }).catch(err => console.log(err));
-});
 
 router.post("/", ChargerValidationSchema(), async (req: any, res: Response) => {
     const result = validationResult(req);
