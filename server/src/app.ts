@@ -6,7 +6,10 @@ import UserController from "./controllers/UserController";
 import RoleController from "./controllers/RoleController";
 import LocalController from "./controllers/LocalController";
 import AvailabilityController from "./controllers/AvailabilityController";
+import ChargeController from "./controllers/ChargeController";
+import ChargerController from "./controllers/ChargerController";
 import SeederController from "./controllers/SeederController";
+import chargeController from "./controllers/ChargeController";
 
 
 // Configure environment variables
@@ -43,6 +46,8 @@ app.use("/users", UserController);
 app.use("/roles", RoleController);
 app.use("/locals", LocalController);
 app.use("/Availabilities", AvailabilityController);
+app.use("/charges", ChargeController)
+app.use("/chargers", ChargerController)
 app.use("/seeder", SeederController)
 
 
