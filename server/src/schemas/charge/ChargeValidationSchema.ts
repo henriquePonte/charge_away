@@ -4,15 +4,9 @@ const ChargeValidationSchema = () => {
     return checkSchema({
         date: {
             notEmpty: true,
-            isDate: {
-                errorMessage: 'Invalid date'
-            }
         },
         duration: {
             notEmpty: true,
-            isDate: {
-                errorMessage: 'Invalid duration'
-            }
         },
         wattConsumed: {
             notEmpty: true,
@@ -34,15 +28,9 @@ const ChargeValidationSchema = () => {
         },
         initialHour: {
             notEmpty: true,
-            isDate: {
-                errorMessage: 'Invalid initial hour'
-            }
         },
         finalHour: {
             notEmpty: true,
-            isDate: {
-                errorMessage: 'Invalid final hour'
-            }
         }
     });
 }
