@@ -1,14 +1,22 @@
 import Router, {Response} from "express";
 import ChargerValidationSchema from "../schemas/charger/ChargerValidationSchema";
 import {matchedData, validationResult} from "express-validator";
-import {ICharger} from "../models/ChargerModel";
+import {ICharger, ChargerModel} from "../models/ChargerModel";
 import {create} from "../services/ChargeService";
+import {ChargeModel} from "../models/ChargeModel";
 
 const router = Router();
 
 router.get("/", (req, res) => {
-    console.log(req.query);
-    res.send("Getting chargers!");
+    ChargeModel.find().then(result => {
+        res.send(result?.toString());
+    }).catch(err => console.log(err));
+});
+
+router.get("/:id", (req, res) => {
+    ChargeModel.findById(req.params.id).then(result => {
+        res.send(result?.toString());
+    }).catch(err => console.log(err));
 });
 
 router.post("/", ChargerValidationSchema(), async (req: any, res: Response) => {
