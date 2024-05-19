@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
     console.log(req.query);
     LocalModel.find()
         .then(result => {
-            res.send(result?.toString());
+            res.json(result);
         })
         .catch(err => {
             console.log(err);
