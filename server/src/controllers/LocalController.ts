@@ -28,6 +28,25 @@ router.get("/", (req, res) => {
 });
 
 /**
+ * Route to fetch all locations of a specific user.
+ *
+ * @param {Object} req - The HTTP request object containing the user ID.
+ * @param {Object} res - The HTTP response object.
+ * @returns {Object} - A list of all locations associated with the user or an error message in case of failure.
+ */
+router.get("/:userId", async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const locations = await LocalModel.find({ user: userId });
+        res.json(locations);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error getting user's locations.");
+    }
+});
+
+/**
  * Finds the closest locations to a specified latitude and longitude coordinates.
  *
  * @param {number} lat - The latitude coordinate.
