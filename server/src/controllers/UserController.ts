@@ -4,6 +4,8 @@ import { matchedData, validationResult } from "express-validator";
 import {create, loginUser, update, destroy} from "../services/UserService";
 import {IUser, UserModel} from "../models/UserModel";
 import {LoginValidationSchema} from "../schemas/user/LoginValidationSchema";
+const jwt = require('jsonwebtoken');
+
 
 const router = Router();
 
@@ -47,13 +49,17 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+
 router.post("/login", LoginValidationSchema(), async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     try {
         const user = await loginUser(email, password);
-        if (user) {
-            return res.json(user);
+
+        if (user && user._id) {
+            const token = jwt.sign({ id: user.id }, 'chargeAway', { expiresIn: '1h' });
+
+            return res.json({ ...user, token });
         } else {
             return res.status(401).json({ message: "Invalid credentials" });
         }
@@ -62,5 +68,6 @@ router.post("/login", LoginValidationSchema(), async (req: Request, res: Respons
         return res.status(500).json({ message: "Internal server error" });
     }
 });
+
 
 export default router;

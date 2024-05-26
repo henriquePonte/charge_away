@@ -1,5 +1,6 @@
 import { IUser, UserModel } from "../models/UserModel";
 import bcrypt from "bcrypt";
+import {ICharger} from "../models/ChargerModel";
 
 export const create = async (person: Partial<IUser>) => {
     if (!person.password) {
