@@ -9,7 +9,11 @@ export interface ICharge extends Document {
     rate: Number,
     cost: Number,
     initialHour: Date,
-    finalHour: Date
+    finalHour: Date,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    }
 }
 
 export const ChargeModel = model<ICharge>(

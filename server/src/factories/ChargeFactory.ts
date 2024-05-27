@@ -8,6 +8,7 @@ export function generateCharge() {
         rate: faker.number.int({ min: 1, max: 5 }),
         cost: faker.number.int(),
         initialHour: faker.date.recent(),
-        finalHour: faker.date.recent()
+        finalHour: faker.date.recent(),
+        user: "665352a2dc9ce9c438d51e54"
     };
 }

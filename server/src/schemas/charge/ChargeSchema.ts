@@ -7,7 +7,11 @@ export const ChargeSchema = new Schema({
     rate: Number,
     cost: Number,
     initialHour: Date,
-    finalHour: Date
+    finalHour: Date,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    }
 });
 
 
