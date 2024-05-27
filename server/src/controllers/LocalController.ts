@@ -3,7 +3,7 @@ import LocalValidationSchema from "../schemas/local/LocalValidationSchema";
 import {matchedData, validationResult} from "express-validator";
 import {Local, LocalModel} from "../models/LocalModel";
 import {create} from "../services/LocalService";
-import { findClosestLocations } from "../services/LocalService";
+import {findClosestLocations} from "../services/LocalService";
 
 
 const router = Router();
@@ -26,26 +26,6 @@ router.get("/", (req, res) => {
             res.status(500).send("Error getting locations.");
         });
 });
-
-/**
- * Route to fetch all locations of a specific user.
- *
- * @param {Object} req - The HTTP request object containing the user ID.
- * @param {Object} res - The HTTP response object.
- * @returns {Object} - A list of all locations associated with the user or an error message in case of failure.
- */
-router.get("/:userId", async (req, res) => {
-    const userId = req.params.userId;
-
-    try {
-        const locations = await LocalModel.find({ user: userId });
-        res.json(locations);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error getting user's locations.");
-    }
-});
-
 /**
  * Finds the closest locations to a specified latitude and longitude coordinates.
  *
@@ -59,7 +39,7 @@ router.get("/closest", async (req, res) => {
     const long = parseFloat(req.query.long as string);
 
     if (isNaN(lat) || isNaN(long)) {
-        return res.status(400).json({ error: 'Latitude and longitude must be valid numbers.' });
+        return res.status(400).json({error: 'Latitude and longitude must be valid numbers.'});
     }
 
     try {
@@ -67,11 +47,27 @@ router.get("/closest", async (req, res) => {
         res.json(closestLocations);
     } catch (error) {
         console.error("Error getting closest locations:", error);
-        res.status(500).json({ error: "Error getting closest locations." });
+        res.status(500).json({error: "Error getting closest locations."});
     }
 });
+/**
+ * Route to fetch all locations of a specific user.
+ *
+ * @param {Object} req - The HTTP request object containing the user ID.
+ * @param {Object} res - The HTTP response object.
+ * @returns {Object} - A list of all locations associated with the user or an error message in case of failure.
+ */
+router.get("/:userId", async (req, res) => {
+    const userId = req.params.userId;
 
-
+    try {
+        const locations = await LocalModel.find({user: userId});
+        res.json(locations);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error getting user's locations.");
+    }
+});
 /**
  * Route to fetch a specific location by its ID.
  *
@@ -112,10 +108,10 @@ router.post("/", LocalValidationSchema(), async (req: any, res: Response) => {
             return res.json(newLocal);
         } catch (error) {
             console.error("LocalController: Error creating new local:", error);
-            return res.status(500).json({ error: "Error creating new local." });
+            return res.status(500).json({error: "Error creating new local."});
         }
     } else {
-        return res.status(400).json({ errors: result.array() });
+        return res.status(400).json({errors: result.array()});
     }
 });
 
@@ -136,7 +132,7 @@ router.put("/:localId", async (req, res) => {
         return res.json(existingLocal);
     } catch (error) {
         console.error("Error updating local:", error);
-        return res.status(500).json({ error: "Error updating local." });
+        return res.status(500).json({error: "Error updating local."});
     }
 });
 
