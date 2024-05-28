@@ -4,6 +4,8 @@ import {matchedData, validationResult} from "express-validator";
 import {Local, LocalModel} from "../models/LocalModel";
 import {create} from "../services/LocalService";
 import {findClosestLocations} from "../services/LocalService";
+import {upload} from "../services/MulterConfigService";
+import path from "path";
 
 
 const router = Router();
@@ -98,20 +100,28 @@ router.get("/:id", (req, res) => {
  * @param {Object} res - The HTTP response object.
  * @returns {Object} - The created location if the request data is valid, or an array of validation errors if the request data is invalid.
  */
-router.post("/", LocalValidationSchema(), async (req: any, res: Response) => {
+router.post("/", upload.single('imageData'), LocalValidationSchema(), async (req: any, res: Response) => {
     const result = validationResult(req);
 
     if (result.isEmpty()) {
         try {
-            const newLocal = await create(matchedData(req) as Partial<Local>);
+            const data = matchedData(req) as Partial<Local>;
+            if (req.file) {
+                data.urlPhoto = path.relative(process.cwd(), req.file.path);
+                console.log("File saved to:", req.file.path);
+            } else {
+                console.log("No file uploaded");
+            }
 
-            return res.json(newLocal);
-        } catch (error) {
+            const newLocal = await create(data);
+            return res.status(201).json(newLocal);
+
+        } catch (error: any) {
             console.error("LocalController: Error creating new local:", error);
-            return res.status(500).json({error: "Error creating new local."});
+            return res.status(500).json({ error: error.message });
         }
     } else {
-        return res.status(400).json({errors: result.array()});
+        return res.status(400).json({ errors: result.array() });
     }
 });
 

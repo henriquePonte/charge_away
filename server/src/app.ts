@@ -9,7 +9,6 @@ import AvailabilityController from "./controllers/AvailabilityController";
 import ChargeController from "./controllers/ChargeController";
 import ChargerController from "./controllers/ChargerController";
 import SeederController from "./controllers/SeederController";
-import chargeController from "./controllers/ChargeController";
 
 
 // Configure environment variables
