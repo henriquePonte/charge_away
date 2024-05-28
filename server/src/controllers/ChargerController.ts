@@ -3,7 +3,6 @@ import ChargerValidationSchema from "../schemas/charger/ChargerValidationSchema"
 import {matchedData, validationResult} from "express-validator";
 import {ICharger, ChargerModel} from "../models/ChargerModel";
 import {create, destroyCharger, updateCharger} from "../services/ChargerService";
-import {ChargeModel, ICharge} from "../models/ChargeModel";
 
 const router = Router();
 
@@ -11,7 +10,7 @@ const router = Router();
  * Route get a Charger
  */
 router.get("/", (req, res) => {
-    ChargeModel.find().then(result => {
+    ChargerModel.find().then(result => {
         res.send(result?.toString());
     }).catch(err => console.log(err));
 });
