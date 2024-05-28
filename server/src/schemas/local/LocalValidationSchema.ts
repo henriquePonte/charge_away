@@ -14,9 +14,6 @@ const LocalValidationSchema = () => {
         status: {
             notEmpty: true
         },
-        urlPhoto: {
-            notEmpty: true
-        },
         user: {
             notEmpty: true
         }

@@ -125,24 +125,29 @@ router.post("/", upload.single('imageData'), LocalValidationSchema(), async (req
     }
 });
 
-router.put("/:localId", async (req, res) => {
-    const localId = req.params.localId;
-    const updatedFields = req.body;
+router.post("/", upload.single('imageData'), LocalValidationSchema(), async (req: any, res: Response) => {
+    const result = validationResult(req);
+
+    if (!result.isEmpty()) {
+        console.log("Validation errors:", result.array());
+        return res.status(400).json({ errors: result.array() });
+    }
 
     try {
-        const existingLocal = await LocalModel.findById(localId);
-        if (!existingLocal) {
-            return res.status(404).send("Local not found.");
+        const data = matchedData(req) as Partial<Local>;
+        if (req.file) {
+            data.urlPhoto = req.file.path;
+            console.log("File saved to:", req.file.path);
+        } else {
+            console.log("No file uploaded");
         }
 
-        Object.assign(existingLocal, updatedFields);
+        const newLocal = await create(data);
+        return res.status(201).json(newLocal);
 
-        await existingLocal.save();
-
-        return res.json(existingLocal);
-    } catch (error) {
-        console.error("Error updating local:", error);
-        return res.status(500).json({error: "Error updating local."});
+    } catch (error: any) {
+        console.error("LocalController: Error creating new local:", error);
+        return res.status(500).json({ error: error.message });
     }
 });
 
