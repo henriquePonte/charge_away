@@ -11,16 +11,14 @@ const router = Router();
 /**
  * Route get a charge
  */
-router.get("/", (req, res) => {
-    console.log(req.query);
-    ChargeModel.find()
-        .then(result => {
-            res.send(result?.toString());
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).send("Error getting charge.");
-        });
+router.get("/", async (req, res) => {
+    try {
+        const charges = await ChargeModel.find();
+        res.json(charges); // envia os dados no formato json
+    } catch (error) {
+        console.error('Error fetching charges:', error);
+        res.status(500).json({ error: 'Internal server error' }); // caso não funcione retornar um erro
+    }
 });
 
 /**
