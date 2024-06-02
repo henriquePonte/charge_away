@@ -11,6 +11,12 @@ const ChargerValidationSchema = () => {
             notEmpty: {
                 errorMessage: 'Status is required!'
             }
+        },
+        costPerWatt:{
+            notEmpty: {errorMessage: 'Cost is required!'}
+        },
+        local:{
+            notEmpty: {errorMessage: 'Local is required!'}
         }
     });
 }

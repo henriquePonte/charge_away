@@ -9,6 +9,7 @@ export function generateCharge() {
         cost: faker.number.int(),
         initialHour: faker.date.recent(),
         finalHour: faker.date.recent(),
-        user: "665352a2dc9ce9c438d51e54"
+        user: "665352a2dc9ce9c438d51e54",
+        local: "66565fcf2831b2225194dd8b"
     };
 }

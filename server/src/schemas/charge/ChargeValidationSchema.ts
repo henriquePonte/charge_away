@@ -1,4 +1,4 @@
-import { checkSchema } from "express-validator";
+import {checkSchema} from "express-validator";
 
 const ChargeValidationSchema = () => {
     return checkSchema({
@@ -31,7 +31,11 @@ const ChargeValidationSchema = () => {
         },
         finalHour: {
             notEmpty: true,
-        }
+        },
+        local: {
+            notEmpty: true,
+        },
+        user: {notEmpty: true}
     });
 }
 

@@ -1,5 +1,5 @@
-import { Schema, model, Document, Model } from "mongoose";
-import { ChargeSchema } from "../schemas/charge/ChargeSchema";
+import {Schema, model, Document, Model} from "mongoose";
+import {ChargeSchema} from "../schemas/charge/ChargeSchema";
 
 // Define a Mongoose model
 export interface ICharge extends Document {
@@ -10,10 +10,10 @@ export interface ICharge extends Document {
     cost: number;
     initialHour: Date;
     finalHour: Date;
-    user: Schema.Types.ObjectId; // para selecionar o utilizador
+    user: Schema.Types.ObjectId;
+    local: Schema.Types.ObjectId;
 }
 
-// Ajuste na definição do modelo
 export const ChargeModel: Model<ICharge> = model<ICharge>(
     "Charge",
     ChargeSchema

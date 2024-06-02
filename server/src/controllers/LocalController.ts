@@ -6,6 +6,7 @@ import {create} from "../services/LocalService";
 import {findClosestLocations} from "../services/LocalService";
 import {upload} from "../services/MulterConfigService";
 import path from "path";
+import fs from "fs";
 
 
 const router = Router();
@@ -59,7 +60,7 @@ router.get("/closest", async (req, res) => {
  * @param {Object} res - The HTTP response object.
  * @returns {Object} - A list of all locations associated with the user or an error message in case of failure.
  */
-router.get("/:userId", async (req, res) => {
+router.get("/user/:userId", async (req, res) => {
     const userId = req.params.userId;
 
     try {
@@ -85,13 +86,30 @@ router.get("/:id", (req, res) => {
             if (!local) {
                 return res.status(404).send("Local not found:");
             }
-            res.send(local.toString());
+
+            const photoPath = String(local.urlPhoto);
+            console.log(photoPath);
+
+            fs.readFile(photoPath, { encoding: 'base64' }, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send("Error reading image.");
+                }
+
+                const localWithImage = {
+                    ...local.toObject(),
+                    imageBase64: data
+                };
+
+                res.json(localWithImage);
+            });
         })
         .catch(err => {
             console.log(err);
             res.status(500).send("Error getting local.");
         });
 });
+
 
 /**
  * Route to create a new location.
