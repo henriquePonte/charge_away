@@ -15,6 +15,20 @@ router.get("/", (req, res) => {
     }).catch(err => console.log(err));
 });
 
+router.get("/local/:localId", (req, res) => {
+    const localId = req.params.localId;
+
+    ChargerModel.find({local: localId})
+        .then(result => {
+            res.json(result);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({error: "Internal server error"});
+        });
+});
+
+
 /**
  * Route create a Charger
  */
@@ -25,7 +39,7 @@ router.post("/", ChargerValidationSchema(), async (req: any, res: Response) => {
         return res.json(await create(matchedData(req) as Partial<ICharger>));
     }
 
-    return res.status(400).json({ errors: result.array() });
+    return res.status(400).json({errors: result.array()});
 });
 
 /**
