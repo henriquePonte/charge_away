@@ -131,3 +131,5 @@ dist
 
 # jetbrains projetc folder
 .idea/
+
+uploads/
