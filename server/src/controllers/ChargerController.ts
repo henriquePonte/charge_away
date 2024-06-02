@@ -11,7 +11,7 @@ const router = Router();
  */
 router.get("/", (req, res) => {
     ChargerModel.find().then(result => {
-        res.send(result?.toString());
+        res.json(result);
     }).catch(err => console.log(err));
 });
 
