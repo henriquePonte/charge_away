@@ -14,10 +14,23 @@ const router = Router();
 router.get("/", async (req, res) => {
     try {
         const charges = await ChargeModel.find();
-        res.json(charges); // envia os dados no formato json
+        res.json(charges);
     } catch (error) {
         console.error('Error fetching charges:', error);
-        res.status(500).json({ error: 'Internal server error' }); // caso não funcione retornar um erro
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.get("/:userId", async (req, res) => {
+    const userId = req.params.userId;
+    console.log("Fetching charges for userId:", userId);
+
+    try {
+        const charges = await ChargeModel.find({ user: userId });
+        res.json(charges);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error getting user's charges.");
     }
 });
 
