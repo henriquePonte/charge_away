@@ -7,7 +7,7 @@ import {findClosestLocations} from "../services/LocalService";
 import {upload} from "../services/MulterConfigService";
 import path from "path";
 import fs from "fs";
-import { ParsedQs } from 'qs';
+import {ParsedQs} from 'qs';
 
 
 const router = Router();
@@ -38,7 +38,7 @@ router.get("/search", (req, res) => {
         return res.status(400).send("Query parameter is required and must be a string");
     }
 
-    LocalModel.find({ type: new RegExp(searchQuery, 'i') })
+    LocalModel.find({type: new RegExp(searchQuery, 'i')})
         .then(result => {
             res.json(result);
         })
@@ -66,10 +66,59 @@ router.get("/closest", async (req, res) => {
 
     try {
         const closestLocations = await findClosestLocations(lat, long);
-        res.json(closestLocations);
+
+        const locationsWithImages = await Promise.all(closestLocations.map(async (local) => {
+            if (!local || !local.urlPhoto) {
+                return null;
+            }
+
+            const photoPath = String(local.urlPhoto);
+
+            try {
+                const data = await fs.promises.readFile(photoPath, {encoding: 'base64'});
+                return {
+                    ...local,
+                    imageBase64: data
+                };
+            } catch (err) {
+                console.error("Error reading image:", err);
+                return {
+                    ...local,
+                    imageBase64: null
+                };
+            }
+        }));
+
+        const validLocations = locationsWithImages.filter(location => location !== null);
+        res.json(validLocations);
     } catch (error) {
         console.error("Error getting closest locations:", error);
         res.status(500).json({error: "Error getting closest locations."});
+    }
+});
+router.get("/:id/photo", async (req, res) => {
+    const localId = req.params.id;
+
+    try {
+        const local = await LocalModel.findById(localId);
+
+        if (!local) {
+            return res.status(404).send("Local not found");
+        }
+
+        const photoPath = String(local.urlPhoto);
+
+        fs.readFile(photoPath, {encoding: 'base64'}, (err, data) => {
+            if (err) {
+                console.error("Error reading image:", err);
+                return res.status(500).send("Error reading image");
+            }
+
+            res.json({imageBase64: data});
+        });
+    } catch (error) {
+        console.error("Error getting local:", error);
+        res.status(500).send("Error getting local");
     }
 });
 /**
@@ -109,7 +158,7 @@ router.get("/:id", (req, res) => {
             const photoPath = String(local.urlPhoto);
             console.log(photoPath);
 
-            fs.readFile(photoPath, { encoding: 'base64' }, (err, data) => {
+            fs.readFile(photoPath, {encoding: 'base64'}, (err, data) => {
                 if (err) {
                     console.log(err);
                     return res.status(500).send("Error reading image.");
@@ -155,10 +204,10 @@ router.post("/", upload.single('imageData'), LocalValidationSchema(), async (req
 
         } catch (error: any) {
             console.error("LocalController: Error creating new local:", error);
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({error: error.message});
         }
     } else {
-        return res.status(400).json({ errors: result.array() });
+        return res.status(400).json({errors: result.array()});
     }
 });
 
@@ -167,7 +216,7 @@ router.post("/", upload.single('imageData'), LocalValidationSchema(), async (req
 
     if (!result.isEmpty()) {
         console.log("Validation errors:", result.array());
-        return res.status(400).json({ errors: result.array() });
+        return res.status(400).json({errors: result.array()});
     }
 
     try {
@@ -184,7 +233,7 @@ router.post("/", upload.single('imageData'), LocalValidationSchema(), async (req
 
     } catch (error: any) {
         console.error("LocalController: Error creating new local:", error);
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({error: error.message});
     }
 });
 
