@@ -7,6 +7,7 @@ import {findClosestLocations} from "../services/LocalService";
 import {upload} from "../services/MulterConfigService";
 import path from "path";
 import fs from "fs";
+import { ParsedQs } from 'qs';
 
 
 const router = Router();
@@ -29,6 +30,24 @@ router.get("/", (req, res) => {
             res.status(500).send("Error getting locations.");
         });
 });
+
+router.get("/search", (req, res) => {
+    const searchQuery: string | ParsedQs | string[] | ParsedQs[] | undefined = req.query.query;
+
+    if (!searchQuery || typeof searchQuery !== 'string') {
+        return res.status(400).send("Query parameter is required and must be a string");
+    }
+
+    LocalModel.find({ type: new RegExp(searchQuery, 'i') })
+        .then(result => {
+            res.json(result);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send("Error getting locations.");
+        });
+});
+
 /**
  * Finds the closest locations to a specified latitude and longitude coordinates.
  *
