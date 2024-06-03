@@ -9,6 +9,7 @@ export interface Local extends Document {
     rate: Number,
     status: String,
     urlPhoto: String,
+    address: String,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'

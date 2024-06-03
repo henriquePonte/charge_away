@@ -16,6 +16,9 @@ const LocalValidationSchema = () => {
         },
         user: {
             notEmpty: true
+        },
+        address:{
+            notEmpty: true
         }
     });
 }

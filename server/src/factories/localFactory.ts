@@ -8,6 +8,7 @@ export function generateLocal() {
         rate: faker.number.int({ min: 1, max: 5 }),
         status: faker.lorem.word(),
         urlPhoto: faker.image.url(),
+        address: faker.location.streetAddress(),
         user: '60d6c7e4873e3c6faaddd123'
     };
 }

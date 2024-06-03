@@ -7,6 +7,7 @@ export const LocalSchema = new Schema({
     rate: Number,
     status: String,
     urlPhoto: String,
+    address: String,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
