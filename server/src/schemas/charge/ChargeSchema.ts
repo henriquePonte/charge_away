@@ -8,6 +8,7 @@ export const ChargeSchema = new Schema({
     cost: Number,
     initialHour: Date,
     finalHour: Date,
+    status: String,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'

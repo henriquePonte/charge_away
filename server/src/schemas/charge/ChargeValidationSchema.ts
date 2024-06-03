@@ -35,7 +35,8 @@ const ChargeValidationSchema = () => {
         local: {
             notEmpty: true,
         },
-        user: {notEmpty: true}
+        user: {notEmpty: true},
+        status: {notEmpty: true}
     });
 }
 

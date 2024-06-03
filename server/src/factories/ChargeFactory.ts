@@ -10,6 +10,7 @@ export function generateCharge() {
         initialHour: faker.date.recent(),
         finalHour: faker.date.recent(),
         user: "665352a2dc9ce9c438d51e54",
-        local: "66565fcf2831b2225194dd8b"
+        local: "66565fcf2831b2225194dd8b",
+        status: faker.lorem.word()
     };
 }

@@ -12,6 +12,7 @@ export interface ICharge extends Document {
     finalHour: Date;
     user: Schema.Types.ObjectId;
     local: Schema.Types.ObjectId;
+    status: String;
 }
 
 export const ChargeModel: Model<ICharge> = model<ICharge>(
