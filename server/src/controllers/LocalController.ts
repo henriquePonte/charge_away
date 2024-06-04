@@ -211,32 +211,37 @@ router.post("/", upload.single('imageData'), LocalValidationSchema(), async (req
     }
 });
 
-router.post("/", upload.single('imageData'), LocalValidationSchema(), async (req: any, res: Response) => {
+router.put("/:id", upload.single('imageData'), LocalValidationSchema(), async (req: any, res: Response) => {
+    const localId = req.params.id;
     const result = validationResult(req);
 
     if (!result.isEmpty()) {
         console.log("Validation errors:", result.array());
-        return res.status(400).json({errors: result.array()});
+        return res.status(400).json({ errors: result.array() });
     }
 
     try {
         const data = matchedData(req) as Partial<Local>;
         if (req.file) {
-            data.urlPhoto = req.file.path;
+            data.urlPhoto = path.relative(process.cwd(), req.file.path);
             console.log("File saved to:", req.file.path);
         } else {
             console.log("No file uploaded");
         }
 
-        const newLocal = await create(data);
-        return res.status(201).json(newLocal);
+        const updatedLocal = await LocalModel.findByIdAndUpdate(localId, data, { new: true });
+
+        if (!updatedLocal) {
+            return res.status(404).send("Local not found.");
+        }
+
+        return res.status(200).json(updatedLocal);
 
     } catch (error: any) {
-        console.error("LocalController: Error creating new local:", error);
-        return res.status(500).json({error: error.message});
+        console.error("Error updating local:", error.message);
+        return res.status(500).json({ error: error.message });
     }
 });
-
 
 /**
  * Route to delete a specific location by its ID.
