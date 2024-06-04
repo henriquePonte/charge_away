@@ -33,6 +33,22 @@ router.get("/:id", (req, res) => {
         });
 });
 
+router.get("/local/:id", (req, res) => {
+    const localId = req.params.id;
+
+    AvailabilityModel.find({local: localId})
+        .then(availability => {
+            if (!availability) {
+                return res.status(404).send("Availability not found:");
+            }
+            res.send(availability.toString());
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send("Error getting Availability.");
+        });
+});
+
 router.post("/", AvailabilityValidationSchema(), async (req: any, res: Response) => {
     const result = validationResult(req);
 
