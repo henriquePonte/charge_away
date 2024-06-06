@@ -23,15 +23,16 @@ router.get("/:id", (req, res) => {
     AvailabilityModel.findById(availabilityId)
         .then(availability => {
             if (!availability) {
-                return res.status(404).send("Availability not found:");
+                return res.status(404).json({ error: "Availability not found" });
             }
-            res.send(availability.toString());
+            res.json(availability);
         })
         .catch(err => {
             console.log(err);
-            res.status(500).send("Error getting Availability.");
+            res.status(500).json({ error: "Error getting Availability" });
         });
 });
+
 
 router.get("/local/:id", (req, res) => {
     const localId = req.params.id;
