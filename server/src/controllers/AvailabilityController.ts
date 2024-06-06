@@ -39,13 +39,13 @@ router.get("/local/:id", (req, res) => {
     AvailabilityModel.find({local: localId})
         .then(availability => {
             if (!availability) {
-                return res.status(404).send("Availability not found:");
+                return res.status(404).json({ error: "Availability not found" });
             }
-            res.send(availability.toString());
+            res.json(availability);
         })
         .catch(err => {
-            console.log(err);
-            res.status(500).send("Error getting Availability.");
+            console.error(err);
+            res.status(500).json({ error: "Error getting Availability" });
         });
 });
 
