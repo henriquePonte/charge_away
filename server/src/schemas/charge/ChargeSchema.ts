@@ -13,9 +13,9 @@ export const ChargeSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    local: {
+    charger: {
         type: Schema.Types.ObjectId,
-        ref: 'locals'
+        ref: 'chargers'
     }
 });
 

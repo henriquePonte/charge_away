@@ -11,7 +11,7 @@ export interface ICharge extends Document {
     initialHour: Date;
     finalHour: Date;
     user: Schema.Types.ObjectId;
-    local: Schema.Types.ObjectId;
+    charger: Schema.Types.ObjectId;
     status: String;
 }
 
