@@ -5,6 +5,8 @@ import {create, loginUser, update, destroy} from "../services/UserService";
 import {IUser, UserModel} from "../models/UserModel";
 import {LoginValidationSchema} from "../schemas/user/LoginValidationSchema";
 import fs from "fs";
+import {upload} from "../services/MulterConfigService";
+import path from "path";
 const jwt = require('jsonwebtoken');
 
 
@@ -56,14 +58,30 @@ router.get("/:username", (req, res) => {
     }).catch(err => console.log(err));
 });
 
-router.post("/", UserValidationSchema(), async (req: any, res: Response) => {
+router.post("/", upload.single('urlPhoto'), UserValidationSchema(), async (req: any, res: Response) => {
     const result = validationResult(req);
 
+    console.log(matchedData(req))
     if (result.isEmpty()) {
-        return res.json(await create(matchedData(req) as Partial<IUser>));
-    }
+        try {
+            const data = matchedData(req) as Partial<IUser>;
+            if (req.file) {
+                data.urlPhoto = path.relative(process.cwd(), req.file.path);
+                console.log("File saved to:", req.file.path);
+            } else {
+                console.log("No file uploaded");
+            }
 
-    return res.status(400).json({ errors: result.array() });
+            const newLocal = await create(data);
+            return res.status(201).json(newLocal);
+
+        } catch (error: any) {
+            console.error("UserController: Error creating new user:", error);
+            return res.status(500).json({error: error.message});
+        }
+    } else {
+        return res.status(400).json({errors: result.array()});
+    }
 });
 
 router.put("/:id", UserValidationSchema(), async (req: any, res: Response) => {
